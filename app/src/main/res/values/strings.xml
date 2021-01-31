@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">IconFinder</string>
+    <string name="search">Search</string>
+    <string name="downloads">Downloads</string>
+    <string name="premium">Premium</string>
+    <string name="free">Free</string>
+    <string name="result_not_loaded">Results could not be loaded</string>
+    <string name="retry">Retry</string>
+    <string name="no_result_found">No results found for this query</string>
+</resources>
