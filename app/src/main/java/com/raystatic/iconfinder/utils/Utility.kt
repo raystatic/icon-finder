@@ -13,12 +13,7 @@ object Utility {
     fun hasWritePermission(context: Context) =
         EasyPermissions.hasPermissions(
             context,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-
-    fun hasReadPermission(context: Context) =
-        EasyPermissions.hasPermissions(
-            context,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
@@ -37,6 +32,12 @@ object Utility {
         val formattedSize = df.format(sizeInMb)
 
         return "$formattedSize MB"
+    }
+
+    fun findDate(path: String): String {
+        val l = path.split("/")
+        val name = l[l.size-1]
+        return name.split(".")[0]
     }
 
 

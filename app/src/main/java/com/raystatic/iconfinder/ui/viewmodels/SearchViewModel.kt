@@ -141,8 +141,11 @@ class SearchViewModel @ViewModelInject constructor(
             val iconDirectory = Utility.getOutputDirectory(context)
             val files = iconDirectory?.listFiles()
             files?.forEach {
-                val downloadedIcon = DownloadedIcon(it.path)
-                insertDownloadedIcon(downloadedIcon)
+                if (it.length() > 0){
+                    val date=  Utility.findDate(it.path)
+                    val downloadedIcon = DownloadedIcon(it.path, date)
+                    insertDownloadedIcon(downloadedIcon)
+                }
             }
         }
 

@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 data class DownloadedIcon(
 
     @PrimaryKey
-    val path:String
+    val path:String,
+
+    val modifiedAt:String
 )

@@ -13,7 +13,7 @@ interface DownloadsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIcon(icon:DownloadedIcon)
 
-    @Query("SELECT * FROM downloads")
+    @Query("SELECT * FROM downloads ORDER BY modifiedAt DESC")
     fun getAllDownloads():LiveData<List<DownloadedIcon>>
 
     @Query("DELETE FROM downloads")

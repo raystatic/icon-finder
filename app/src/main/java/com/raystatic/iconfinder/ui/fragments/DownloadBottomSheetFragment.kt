@@ -1,5 +1,6 @@
 package com.raystatic.iconfinder.ui.fragments
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
+import java.io.File
 
 private const val REQUEST_WRITE_PERMISSION = 0
 @AndroidEntryPoint
@@ -42,15 +44,6 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
         savedInstanceState: Bundle?
     ): View? {
         _binding = BottomSheetDownloadBinding.inflate(inflater,container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        requestPermission()
-
-        selectedDownloadUrl = ""
 
         binding.btnDownload.setOnClickListener {
             if (selectedDownloadUrl.isNotEmpty()) {
@@ -60,6 +53,12 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
             }
         }
 
+        subscribeToObservers()
+
+        return binding.root
+    }
+
+    private fun subscribeToObservers() {
         viewmodel.selectedIcon.observe(viewLifecycleOwner, {
             it?.let { icon ->
                 icon.raster_sizes.forEachIndexed { index, raster ->
@@ -115,7 +114,10 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
                     it.data?.let { path ->
                         Timber.d("File downloaded at $path")
                         binding.root.showToast(requireContext(),Constants.DOWNLOAD_SUCCESS)
-                        viewmodel.insertDownloadedIcon(DownloadedIcon(path))
+                        val file = File(path)
+                        if (file.length() > 0){
+                            viewmodel.insertDownloadedIcon(DownloadedIcon(path,Utility.findDate(path)))
+                        }
                     } ?: kotlin.run {
                         binding.root.showToast(requireContext(),Constants.SOMETHING_WENT_WRONG)
                     }
@@ -134,6 +136,14 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
                 }
             }
         })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        requestPermission()
+
+        selectedDownloadUrl = ""
 
     }
 
@@ -144,7 +154,8 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
             this,
             getString(R.string.accept_write_permission),
             REQUEST_WRITE_PERMISSION,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
         )
     }
 
@@ -180,6 +191,11 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("onStop")
     }
 
     override fun onDestroyView() {
