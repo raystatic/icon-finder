@@ -1,16 +1,22 @@
 package com.raystatic.iconfinder.ui.viewmodels
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.raystatic.iconfinder.data.IconsRepository
+import com.raystatic.iconfinder.data.models.Icon
 
 class SearchViewModel @ViewModelInject constructor(
     private val repository: IconsRepository
 ):ViewModel() {
+
+    private val _selectedIcon = MutableLiveData<Icon?>()
+
+    val selectedIcon:LiveData<Icon?> get() = _selectedIcon
+
+    fun setSelectedIcon(icon: Icon){
+        _selectedIcon.postValue(icon)
+    }
 
     private val currentIconQuery = MutableLiveData(DEFAULT_QUERY)
 

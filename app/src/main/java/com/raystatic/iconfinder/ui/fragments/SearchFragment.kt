@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import com.raystatic.iconfinder.R
@@ -20,10 +21,11 @@ import kotlinx.android.synthetic.main.fragment_search.*
 @AndroidEntryPoint
 class SearchFragment: Fragment(R.layout.fragment_search) {
 
-    private val viewmodel by viewModels<SearchViewModel>()
+    private val viewmodel by activityViewModels<SearchViewModel>()
     private var _binding: FragmentSearchBinding?=null
     private val binding get() = _binding!!
     private lateinit var iconAdapter: IconAdapter
+    private lateinit var downloadBottomSheetFragment: DownloadBottomSheetFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +46,13 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
     }
 
     private fun initUI() {
-        iconAdapter = IconAdapter(requireContext())
+
+        downloadBottomSheetFragment = DownloadBottomSheetFragment()
+
+        iconAdapter = IconAdapter(requireContext()){icon ->
+            viewmodel.setSelectedIcon(icon)
+            downloadBottomSheetFragment.show(childFragmentManager,downloadBottomSheetFragment.tag)
+        }
         binding.apply {
             rvIcons.apply {
                 setHasFixedSize(true)

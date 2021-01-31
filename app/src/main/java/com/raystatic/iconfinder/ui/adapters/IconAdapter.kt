@@ -13,7 +13,10 @@ import com.raystatic.iconfinder.R
 import com.raystatic.iconfinder.data.models.Icon
 import com.raystatic.iconfinder.databinding.ItemIconBinding
 
-class IconAdapter(val context:Context): PagingDataAdapter<Icon, IconAdapter.IconViewHolder>(ICON_COMPARATOR) {
+class IconAdapter(
+    val context:Context,
+    val onDownload: (Icon) -> Unit
+): PagingDataAdapter<Icon, IconAdapter.IconViewHolder>(ICON_COMPARATOR) {
 
     inner class IconViewHolder(private val binding:ItemIconBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(icon: Icon) {
@@ -30,6 +33,10 @@ class IconAdapter(val context:Context): PagingDataAdapter<Icon, IconAdapter.Icon
                     tvFreemium.text = context.getString(R.string.premium)
                 }else{
                     tvFreemium.text = context.getString(R.string.free)
+                }
+
+                tvFreemium.setOnClickListener {
+                    onDownload(icon)
                 }
             }
         }
