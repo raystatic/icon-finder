@@ -24,4 +24,6 @@ class IconsRepository @Inject constructor(
             }
         ).liveData
 
+    suspend fun downloadIcon(url:String) = apiService.downloadFile(url)
+
 }
