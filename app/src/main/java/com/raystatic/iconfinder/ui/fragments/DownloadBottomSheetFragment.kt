@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.raystatic.iconfinder.R
+import com.raystatic.iconfinder.data.models.DownloadedIcon
 import com.raystatic.iconfinder.databinding.BottomSheetDownloadBinding
 import com.raystatic.iconfinder.ui.viewmodels.SearchViewModel
 import com.raystatic.iconfinder.utils.Constants
@@ -51,6 +52,14 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
 
         selectedDownloadUrl = ""
 
+        binding.btnDownload.setOnClickListener {
+            if (selectedDownloadUrl.isNotEmpty()) {
+                viewmodel.downloadIcon(selectedDownloadUrl)
+            } else {
+                binding.radioGroup.showToast(requireContext(),Constants.SELECT_SIZE)
+            }
+        }
+
         viewmodel.selectedIcon.observe(viewLifecycleOwner, {
             it?.let { icon ->
                 icon.raster_sizes.forEachIndexed { index, raster ->
@@ -72,14 +81,6 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
                         .load(raster.formats[0].preview_url)
                         .apply(RequestOptions().override(raster.size_width, raster.size_height))
                         .into(binding.imgPreview)
-                }
-
-                binding.btnDownload.setOnClickListener {
-                    if (selectedDownloadUrl.isNotEmpty()) {
-                        viewmodel.downloadIcon(selectedDownloadUrl)
-                    } else {
-                        binding.radioGroup.showToast(requireContext(),Constants.SELECT_SIZE)
-                    }
                 }
 
             }
@@ -114,6 +115,7 @@ class DownloadBottomSheetFragment: BottomSheetDialogFragment(), EasyPermissions.
                     it.data?.let { path ->
                         Timber.d("File downloaded at $path")
                         binding.root.showToast(requireContext(),Constants.DOWNLOAD_SUCCESS)
+                        viewmodel.insertDownloadedIcon(DownloadedIcon(path))
                     } ?: kotlin.run {
                         binding.root.showToast(requireContext(),Constants.SOMETHING_WENT_WRONG)
                     }

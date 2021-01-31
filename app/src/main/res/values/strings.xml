@@ -9,5 +9,6 @@
     <string name="no_result_found">No results found for this query</string>
     <string name="accept_write_permission">You need to accept write permission to download the icons</string>
     <string name="accept_read_permission">You need to accept read permission to view the downloads</string>
+    <string name="share">Share</string>
 
 </resources>

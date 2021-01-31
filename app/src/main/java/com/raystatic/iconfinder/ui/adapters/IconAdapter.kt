@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,10 @@ class IconAdapter(
                     .centerCrop()
                     .apply(RequestOptions().override(rasterIcons.size_width, rasterIcons.size_height))
                     .into(imgIcon)
+
+                tvFreemium.isVisible = true
+                tvShare.isVisible = false
+                tvSize.isVisible = false
 
                 if (icon.is_premium){
                     tvFreemium.text = context.getString(R.string.premium)

@@ -6,9 +6,11 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.raystatic.iconfinder.data.IconsRepository
+import com.raystatic.iconfinder.data.models.DownloadedIcon
 import com.raystatic.iconfinder.data.models.Icon
 import com.raystatic.iconfinder.utils.Constants
 import com.raystatic.iconfinder.utils.Resource
+import com.raystatic.iconfinder.utils.Utility
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -77,8 +79,7 @@ class SearchViewModel @ViewModelInject constructor(
 
         try {
             try {
-                val contextWrapper = ContextWrapper(context)
-                val iconDirectory = contextWrapper.getDir(Constants.ICONS_DIRECTORY,Context.MODE_PRIVATE)
+                val iconDirectory = Utility.getOutputDirectory(context)
                 val iconFile = File(iconDirectory,"${System.currentTimeMillis()}.png")
 
                 val filReader = ByteArray(size = 4096)
@@ -123,6 +124,28 @@ class SearchViewModel @ViewModelInject constructor(
             _savedFile.postValue(Resource.error(Constants.ERROR_SAVING_FILE, null))
             return@withContext false
         }
+    }
+
+    fun insertDownloadedIcon(downloadedIcon:DownloadedIcon) = viewModelScope.launch {
+        repository.insertDownloadedIcon(downloadedIcon)
+    }
+
+    fun deleteAllDownloads() = viewModelScope.launch {
+        repository.deleteAllDownload()
+    }
+
+    val downloadedIcons = repository.getAllDownloads()
+
+    fun fetchDownloads(context: Context) = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            val iconDirectory = Utility.getOutputDirectory(context)
+            val files = iconDirectory?.listFiles()
+            files?.forEach {
+                val downloadedIcon = DownloadedIcon(it.path)
+                insertDownloadedIcon(downloadedIcon)
+            }
+        }
+
     }
 
     companion object{

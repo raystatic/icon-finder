@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.GridLayoutManager
 import com.raystatic.iconfinder.R
 import com.raystatic.iconfinder.databinding.FragmentSearchBinding
 import com.raystatic.iconfinder.ui.adapters.IconAdapter
@@ -56,6 +57,7 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
         binding.apply {
             rvIcons.apply {
                 setHasFixedSize(true)
+                layoutManager = GridLayoutManager(requireContext(),2,GridLayoutManager.VERTICAL,false)
                 itemAnimator = null
                 adapter = iconAdapter.withLoadStateHeaderAndFooter(
                     header =IconLoadStateAdapter{iconAdapter.retry()},

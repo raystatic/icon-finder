@@ -9,7 +9,10 @@ object Constants {
     const val SELECT_SIZE = "Select a size"
     const val DOWNLOADING = "Downloading file.."
     const val DOWNLOAD_FILE = "Download"
+    const val SHARE_ICON = "Share icon using"
 
     const val ICONS_DIRECTORY = "Icons"
+
+    const val ROOM_DB_NAME = "Icon_finder_db"
 
 }
