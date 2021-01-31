@@ -15,3 +15,5 @@
 **`Room for local database`**
 
 **`Paging3 Library for pagination`**
+
+**`Dagger Hilt for Dependency Injection`**
